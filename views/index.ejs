@@ -1,0 +1,32 @@
+<%- include('partials/header') %>
+
+  <div class="container">
+
+    <table class="table ellipsis table-striped">
+      
+      <tr>
+        <th><i class="glyphicon glyphicon-pencil"> </i></th>
+        <% schema.forEach(field => { %>
+          <th><%= field.name %></th>
+        <% }) %>
+      </tr>
+
+      <% rows.forEach((row) => { %>
+        <tr>
+          <% row.forEach((r, i) => { %>
+            
+            <%
+            var content = ( i ? r : '<a href="/manage/'+r+'"><i class="glyphicon glyphicon-pencil"> </i></a>' );
+            %>
+            <td><%- content %> </td>
+            
+
+          <% }) %>
+        </tr>
+      <% }) %>
+
+    </table>
+
+  </div><!-- /.container -->
+
+<%- include('partials/footer') %>

@@ -1,0 +1,76 @@
+<%- include('partials/header') %>
+
+  <div class="container">
+
+    <h1>Manage <%= byId._id %></h1>
+
+    <form id="manage">
+      <% schema.fields.forEach(field => { %>
+        
+        <% if (field.type == "string") { %>
+          <div class="form-group">
+            <label for="exampleInputEmail1"><%= field.name %> string </label>
+            <div class="input-group">
+              <span class="input-group-addon">Az</span>
+              <input type="text" class="form-control" id="<%= field.name %>" name="<%= field.name %>" value="<%= byId[field.name] %>">
+            </div>
+          </div>
+        <% } %>
+
+        <% if (field.type == "number") { %>
+          <div class="form-group">
+            <label for="exampleInputEmail1"><%= field.name %> number</label>
+            <div class="input-group">
+              <span class="input-group-addon">#</span>
+              <input type="number" class="form-control" id="<%= field.name %>" name="<%= field.name %>" value="<%= byId[field.name] %>">
+            </div>
+          </div>
+        <% } %>
+
+        <% if (field.type == "boolean") { %>
+          <div class="form-group">
+            <label for="exampleInputEmail1"><%= field.name %> </label>
+            <div class="input-group">
+              <select class="form-control" id="<%= field.name %>" name="<%= field.name %>">
+                <option value="true" <%= (byId[field.name] == true ? 'selected' : '') %> >true</option>
+                <option value="false" <%= (byId[field.name] == false ? 'selected' : '') %> >false</option>
+              </select>
+            </div>
+          </div>
+        <% } %>
+
+      <% }) %>
+
+      <input type="hidden" name="_id" id="_id" value="<%= byId._id %>">
+      <input type="hidden" name="_rev" id="_rev" value="<%= byId._rev %>">
+
+      <button type="submit" class="btn btn-default">Submit</button>
+    </form>
+
+    
+    <script>
+
+    $(document).ready(function() {
+      $('#manage').submit(function(e) {
+
+        e.preventDefault();
+
+        $.ajax({
+          type: "POST",
+          url: "/edit/<%= byId._id %>",
+          data: $("#manage").serialize(),
+          success: function(data) {
+            console.log(data);
+          }
+        });
+
+      })
+    })
+      
+        
+
+    </script>
+
+  </div><!-- /.container -->
+
+<%- include('partials/footer') %>
