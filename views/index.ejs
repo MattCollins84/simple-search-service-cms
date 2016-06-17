@@ -2,7 +2,29 @@
 
   <div class="container">
 
-    <table class="table ellipsis table-striped">
+    <h1>Select a row <a href="/add" class="btn btn-large btn-primary pull-right"><i class="glyphicon glyphicon-plus"> </i>Add</a></h1>
+
+    <form class="form-inline" method="GET" action="/">
+      <div class="form-group">
+        <label for="search">Search</label>
+        <input type="text" class="form-control" id="q" name="q" value="<%= q %>">
+      </div>
+      <div class="form-group">
+        <div class="input-group">
+          <select class="form-control" id="limit" name="limit">
+            <option value="10" <%= (limit == 10 ? 'selected' : '') %>>10 Results</option>
+            <option value="20" <%= (limit == 20 ? 'selected' : '') %>>20 Results</option>
+            <option value="30" <%= (limit == 30 ? 'selected' : '') %>>30 Results</option>
+            <option value="40" <%= (limit == 40 ? 'selected' : '') %>>40 Results</option>
+            <option value="50" <%= (limit == 50 ? 'selected' : '') %>>50 Results</option>
+          </select>
+        </div>
+      </div>
+      <button type="submit" class="btn btn-info">Search</button>
+      <a href="/" class="btn btn-warning">Reset</a>
+    </form>
+
+    <table class="table ellipsis table-striped mt20">
       
       <tr>
         <th><i class="glyphicon glyphicon-pencil"> </i></th>

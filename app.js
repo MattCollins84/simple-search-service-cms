@@ -7,7 +7,11 @@ var express = require('express'),
     path = require('path'),
     isloggedin = require('./lib/isloggedin.js'),
     homepage = require('./lib/homepage.js'),
-    manage = require('./lib/manage.js')
+    manage = require('./lib/manage.js'),
+    edit = require('./lib/edit.js'),
+    add = require('./lib/add.js'),
+    insert = require('./lib/insert.js'),
+    _ = require('underscore');
 
 // set the view engine to ejs
 app.set('view engine', 'ejs');
@@ -24,7 +28,10 @@ var bodyParser = require('body-parser')({extended:true})
 // home
 app.get('/', isloggedin(), function (req, res) {
 
-  homepage.render({}, function(err, data) {
+  var limit = req.query.limit || 10;
+  var q = req.query.q || "*:*";
+
+  homepage.render({ limit: limit, q: q }, function(err, data) {
     res.render('index', data)
   });
       
@@ -42,8 +49,71 @@ app.get('/manage/:id', isloggedin(), function (req, res) {
 // submit edits
 app.post('/edit/:id', isloggedin(), bodyParser, function (req, res) {
   
-  console.log("editing", req.body._id)
-  res.send(req.body);
+  edit.process(req.params.id, req.body, function(err, data) {
+
+    // parse the error
+    if (err) {
+
+      var errors = [];
+
+      if (_.isArray(err)) {
+        errors = err;
+      }
+
+      else if (!_.isUndefined(err.reason)) {
+        errors.push(err.reason);
+      }
+
+      else {
+        errors.push("Unknown error occured");
+      }
+
+      return res.status(404).send({ success: false, error: errors });
+    }
+
+    res.send({ success: true, data: data });
+
+  })
+      
+});
+
+// add a row
+app.get('/add', isloggedin(), function (req, res) {
+
+  add.render(function(err, data) {
+    res.render('add', data)
+  });
+      
+});
+
+// submit inserts
+app.post('/insert', isloggedin(), bodyParser, function (req, res) {
+  
+  insert.process(req.body, function(err, data) {
+
+    // parse the error
+    if (err) {
+
+      var errors = [];
+
+      if (_.isArray(err)) {
+        errors = err;
+      }
+
+      else if (!_.isUndefined(err.reason)) {
+        errors.push(err.reason);
+      }
+
+      else {
+        errors.push("Unknown error occured");
+      }
+
+      return res.status(404).send({ success: false, error: errors });
+    }
+
+    res.send({ success: true, data: data });
+
+  })
       
 });
 

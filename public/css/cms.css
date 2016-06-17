@@ -1,6 +1,18 @@
-table.ellipsis td {
+.hidden {
+	display: none;
+}
+
+.table.ellipsis td {
     max-width: 0;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+}
+
+.mt20 {
+	margin-top: 20px;
+}
+
+.mb20 {
+	margin-bottom: 20px;
 }
