@@ -4,8 +4,9 @@ Revisit:
 - ES6
 - Dependencies tidy up
 
-Editing:
-- Handle conflicts
+Deleting:
+- UI
+- API
 
 UI:
 - Tidy it up

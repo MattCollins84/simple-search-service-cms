@@ -11,7 +11,8 @@ var express = require('express'),
     edit = require('./lib/edit.js'),
     add = require('./lib/add.js'),
     insert = require('./lib/insert.js'),
-    _ = require('underscore');
+    _ = require('underscore'),
+    debug = require('debug')('seams')
 
 // set the view engine to ejs
 app.set('view engine', 'ejs');
@@ -28,11 +29,22 @@ var bodyParser = require('body-parser')({extended:true})
 // home
 app.get('/', isloggedin(), function (req, res) {
 
+  debug('homepage', 'start');
   var limit = req.query.limit || 10;
   var q = req.query.q || "*:*";
+  var bookmark = req.query.bookmark || false;
 
-  homepage.render({ limit: limit, q: q }, function(err, data) {
+  homepage.render({ limit: limit, q: q, bookmark: bookmark }, function(err, data) {
+    
+    if (err) {
+      return res.send(err.reason);
+    }
+
+    // store this bookmark as the previous bookmark, so we can go back
+    data.previousBookmark = req.query.bookmark;
+
     res.render('index', data)
+
   });
       
 });

@@ -12,6 +12,7 @@
       <div class="form-group">
         <div class="input-group">
           <select class="form-control" id="limit" name="limit">
+            <option value="5" <%= (limit == 5 ? 'selected' : '') %>>5 Results</option>
             <option value="10" <%= (limit == 10 ? 'selected' : '') %>>10 Results</option>
             <option value="20" <%= (limit == 20 ? 'selected' : '') %>>20 Results</option>
             <option value="30" <%= (limit == 30 ? 'selected' : '') %>>30 Results</option>
@@ -23,6 +24,14 @@
       <button type="submit" class="btn btn-info">Search</button>
       <a href="/" class="btn btn-warning">Reset</a>
     </form>
+
+    <p class="mt20"><%= totalRows %> rows found in total.</p>
+
+    <% if (rows.length > 0) { %>
+      <p class="mt20"><a href="/?limit=<%= limit %>&q=<%= q %>&bookmark=<%= bookmark %>">Next</a></p>
+    <% } %>
+
+    <p class="mt20"><a href="/?limit=<%= limit %>&q=<%= q %>&bookmark=<%= previousBookmark %>">Back</a></p>
 
     <table class="table ellipsis table-striped mt20">
       
@@ -46,6 +55,12 @@
           <% }) %>
         </tr>
       <% }) %>
+
+      <% if (rows.length === 0) { %>
+        <tr>
+          <td colspan="<%= schema.length %>">There are no records to show.</td>
+        </tr>
+      <% } %>
 
     </table>
 
