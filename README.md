@@ -57,7 +57,7 @@ Example responses:
 
 ### Edit data
 
-Edit existing data using the `PUTT /row/<row_id>` endpoint, as shown below:
+Edit existing data using the `PUT /row/<row_id>` endpoint, as shown below:
 
 ```bash
 curl -X PUT /row/ce8ce7be2c665c132b15f1a37f92c1ce -d'_id=ce8ce7be2c665c132b15f1a37f92c1ce&field_1=value_1&field_n=value_n'
