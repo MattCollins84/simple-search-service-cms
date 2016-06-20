@@ -79,10 +79,6 @@ Remove data using the `DELETE /row/<row_id>` endpoint, as shown below:
 CURL -X DELETE /row/ce8ce7be2c665c132b15f1a37f92c1ce
 ```
 
-### Architecture Diagram
-
-TO COME
-
 ## Running the app on Bluemix
 
 The fastest way to deploy this application to Bluemix is to click the **Deploy to Bluemix** button below.
