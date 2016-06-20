@@ -11,6 +11,7 @@ var express = require('express'),
     edit = require('./lib/edit.js'),
     add = require('./lib/add.js'),
     insert = require('./lib/insert.js'),
+    del = require('./lib/delete.js'),
     _ = require('underscore'),
     debug = require('debug')('seams')
 
@@ -32,7 +33,7 @@ app.get('/', isloggedin(), function (req, res) {
   debug('homepage', 'start');
   var limit = req.query.limit || 10;
   var q = req.query.q || "*:*";
-  var bookmark = req.query.bookmark || false;
+  var bookmark = req.query.bookmark || "";
 
   homepage.render({ limit: limit, q: q, bookmark: bookmark }, function(err, data) {
     
@@ -40,10 +41,11 @@ app.get('/', isloggedin(), function (req, res) {
       return res.send(err.reason);
     }
 
-    // store this bookmark as the previous bookmark, so we can go back
-    data.previousBookmark = req.query.bookmark;
+    if (req.query.partial) {
+      return res.render('partials/rows', data);
+    }
 
-    res.render('index', data)
+    return res.render('index', data);
 
   });
       
@@ -126,6 +128,37 @@ app.post('/insert', isloggedin(), bodyParser, function (req, res) {
     res.send({ success: true, data: data });
 
   })
+      
+});
+
+// delete a row
+app.delete('/:id', isloggedin(), function (req, res) {
+
+  del.process(req.params.id, function(err, data) {
+    
+    // parse the error
+    if (err) {
+
+      var errors = [];
+
+      if (_.isArray(err)) {
+        errors = err;
+      }
+
+      else if (!_.isUndefined(err.reason)) {
+        errors.push(err.reason);
+      }
+
+      else {
+        errors.push("Unknown error occured");
+      }
+
+      return res.status(404).send({ success: false, error: errors });
+    }
+
+    res.send({ success: true, data: data });
+
+  });
       
 });
 

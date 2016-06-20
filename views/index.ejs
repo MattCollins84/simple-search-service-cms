@@ -27,43 +27,72 @@
 
     <p class="mt20"><%= totalRows %> rows found in total.</p>
 
-    <% if (rows.length > 0) { %>
-      <p class="mt20"><a href="/?limit=<%= limit %>&q=<%= q %>&bookmark=<%= bookmark %>">Next</a></p>
-    <% } %>
+    <script>
+      console.log('TBM', '<%= thisBookmark %>');
+      console.log('NBM', '<%= nextBookmark %>');
+    </script>
 
-    <p class="mt20"><a href="/?limit=<%= limit %>&q=<%= q %>&bookmark=<%= previousBookmark %>">Back</a></p>
-
-    <table class="table ellipsis table-striped mt20">
+    <table class="table ellipsis table-striped mt20" id="searchResults">
       
       <tr>
-        <th><i class="glyphicon glyphicon-pencil"> </i></th>
+        <th><i class="glyphicon glyphicon-th-list"> </i></th>
         <% schema.forEach(field => { %>
           <th><%= field.name %></th>
         <% }) %>
       </tr>
 
-      <% rows.forEach((row) => { %>
-        <tr>
-          <% row.forEach((r, i) => { %>
-            
-            <%
-            var content = ( i ? r : '<a href="/manage/'+r+'"><i class="glyphicon glyphicon-pencil"> </i></a>' );
-            %>
-            <td><%- content %> </td>
-            
-
-          <% }) %>
-        </tr>
-      <% }) %>
-
-      <% if (rows.length === 0) { %>
-        <tr>
-          <td colspan="<%= schema.length %>">There are no records to show.</td>
-        </tr>
-      <% } %>
+      <%- include('partials/rows') %>
 
     </table>
 
   </div><!-- /.container -->
+
+  <script>
+
+    var showMore = function(bookmark) {
+
+      $('button#showMore').attr("disabled", "disabled");
+
+      $.ajax({
+        type: "GET",
+        url: "/",
+        data: "partial=true&bookmark="+bookmark+"&limit=<%= limit %>&q=<%= q %>",
+        success: function(data) {
+          var t = $('table#searchResults tr#row-showMore').remove();
+          $('table#searchResults tbody').append(data);
+        },
+        error: function(data, x, y) {
+          $('button#showMore').attr("disabled", "");
+        }
+      });
+
+    }
+
+    $(document).ready(function() {
+
+      $('a[data-delete]').click(function(a) {
+
+        var id = $(this).attr("data-delete");
+
+        if (confirm("Are you sure you wish to delete this row?")) {
+
+          $.ajax({
+            type: "DELETE",
+            url: "/"+id,
+            success: function(data) {
+              location.reload();
+            },
+            error: function(data, x, y) {
+              alert("There was a problem deleting this row.");
+            }
+          });
+
+        }
+
+      })
+
+    })
+
+  </script>
 
 <%- include('partials/footer') %>
