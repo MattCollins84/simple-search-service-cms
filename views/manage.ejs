@@ -2,7 +2,7 @@
 
   <div class="container">
 
-    <h1>Manage <%= byId._id %></h1>
+    <h1>Manage <%= byId._id %> <a href="/" class="btn btn-large btn-primary pull-right"><i class="glyphicon glyphicon-search"> </i> Search</a></h1>
 
     <form id="manage">
       <% schema.fields.forEach(field => { %>
@@ -66,8 +66,8 @@
         $('#update-error').addClass('hidden');
 
         $.ajax({
-          type: "POST",
-          url: "/edit/<%= byId._id %>",
+          type: "PUT",
+          url: "/row/<%= byId._id %>",
           data: $("#manage").serialize(),
           success: function(data) {
             $('#update-success').removeClass('hidden');

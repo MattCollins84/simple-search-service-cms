@@ -19,7 +19,7 @@
   </tr>
 <% } %>
 
-<% if (thisBookmark != nextBookmark) { %>
+<% if (thisBookmark != nextBookmark && rows.length > 0) { %>
 
   <tr id='row-showMore'>
     <td colspan="<%= (schema.length + 1) %>" align="center">

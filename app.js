@@ -1,4 +1,4 @@
-var express = require('express'),
+const express = require('express'),
     async = require('async'),
     compression = require('compression'),
     cfenv = require('cfenv'),
@@ -13,7 +13,8 @@ var express = require('express'),
     insert = require('./lib/insert.js'),
     del = require('./lib/delete.js'),
     _ = require('underscore'),
-    debug = require('debug')('seams')
+    debug = require('debug')('seams'),
+    parseErrors = require('./lib/errors.js').parse
 
 // set the view engine to ejs
 app.set('view engine', 'ejs');
@@ -25,22 +26,24 @@ app.use(express.static(__dirname + '/public'));
 app.use(compression());
 
 // posted body parser
-var bodyParser = require('body-parser')({extended:true})
+const bodyParser = require('body-parser')({extended:true})
 
 // home
-app.get('/', isloggedin(), function (req, res) {
+app.get('/', function (req, res) {
 
   debug('homepage', 'start');
-  var limit = req.query.limit || 10;
-  var q = req.query.q || "*:*";
-  var bookmark = req.query.bookmark || "";
+  const limit = req.query.limit || 10;
+  const q = req.query.q || "*:*";
+  const bookmark = req.query.bookmark || "";
 
   homepage.render({ limit: limit, q: q, bookmark: bookmark }, function(err, data) {
     
     if (err) {
-      return res.send(err.reason);
+      const errors = parseErrors(err)
+      return res.status(404).send({ success: false, error: errors });
     }
 
+    // do we want to render just the extra rows, or the whole page?
     if (req.query.partial) {
       return res.render('partials/rows', data);
     }
@@ -55,37 +58,22 @@ app.get('/', isloggedin(), function (req, res) {
 app.get('/manage/:id', isloggedin(), function (req, res) {
 
   manage.render({ id: req.params.id}, function(err, data) {
-    res.render('manage', data)
+    return res.render('manage', data)
   });
       
 });
 
 // submit edits
-app.post('/edit/:id', isloggedin(), bodyParser, function (req, res) {
+app.put('/row/:id', isloggedin(), bodyParser, function (req, res) {
   
   edit.process(req.params.id, req.body, function(err, data) {
 
-    // parse the error
     if (err) {
-
-      var errors = [];
-
-      if (_.isArray(err)) {
-        errors = err;
-      }
-
-      else if (!_.isUndefined(err.reason)) {
-        errors.push(err.reason);
-      }
-
-      else {
-        errors.push("Unknown error occured");
-      }
-
+      const errors = parseErrors(err)
       return res.status(404).send({ success: false, error: errors });
     }
 
-    res.send({ success: true, data: data });
+    return res.send({ success: true, data: data });
 
   })
       
@@ -95,76 +83,56 @@ app.post('/edit/:id', isloggedin(), bodyParser, function (req, res) {
 app.get('/add', isloggedin(), function (req, res) {
 
   add.render(function(err, data) {
-    res.render('add', data)
+    
+    if (err) {
+      const errors = parseErrors(err)
+      return res.status(404).send({ success: false, error: errors });
+    }
+
+    return res.render('add', data);
+
   });
       
 });
 
 // submit inserts
-app.post('/insert', isloggedin(), bodyParser, function (req, res) {
+app.post('/row', isloggedin(), bodyParser, function (req, res) {
   
   insert.process(req.body, function(err, data) {
 
-    // parse the error
     if (err) {
-
-      var errors = [];
-
-      if (_.isArray(err)) {
-        errors = err;
-      }
-
-      else if (!_.isUndefined(err.reason)) {
-        errors.push(err.reason);
-      }
-
-      else {
-        errors.push("Unknown error occured");
-      }
-
+      const errors = parseErrors(err)
       return res.status(404).send({ success: false, error: errors });
     }
 
-    res.send({ success: true, data: data });
+    return res.send({ success: true, data: data });
 
   })
       
 });
 
 // delete a row
-app.delete('/:id', isloggedin(), function (req, res) {
+app.delete('/row/:id', isloggedin(), function (req, res) {
 
   del.process(req.params.id, function(err, data) {
     
     // parse the error
     if (err) {
-
-      var errors = [];
-
-      if (_.isArray(err)) {
-        errors = err;
-      }
-
-      else if (!_.isUndefined(err.reason)) {
-        errors.push(err.reason);
-      }
-
-      else {
-        errors.push("Unknown error occured");
-      }
-
+      const errors = parseErrors(err)
       return res.status(404).send({ success: false, error: errors });
     }
 
-    res.send({ success: true, data: data });
+    return res.send({ success: true, data: data });
 
   });
       
 });
 
-// start server on the specified port and binding host
+// start server on the specified port and binding host and output a message
 app.listen(appEnv.port, appEnv.bind, function() {
 
-  // print a message when the server starts listening
   console.log("server starting on " + appEnv.url);
+
 });
+
+require("cf-deployment-tracker-client").track();

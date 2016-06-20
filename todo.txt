@@ -1,12 +1,6 @@
 Revisit:
-- Sensible errors
-- Code tidy up
-- ES6
-- Dependencies tidy up
-
-Deleting:
-- UI
-- API
+Lockdown = readonly
+Test front-to-back
 
 UI:
 - Tidy it up

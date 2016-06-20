@@ -2,7 +2,7 @@
 
   <div class="container">
 
-    <h1>Add New Row</h1>
+    <h1>Add New Row <a href="/" class="btn btn-large btn-primary pull-right"><i class="glyphicon glyphicon-search"> </i> Search</a></h1>
 
     <form id="manage">
       <% schema.fields.forEach(field => { %>
@@ -66,11 +66,11 @@
 
         $.ajax({
           type: "POST",
-          url: "/insert",
+          url: "/row",
           data: $("#manage").serialize(),
           success: function(data) {
             $('#update-success').removeClass('hidden');
-            $('#success-msg').html("Your new document ID is: " + data.data.id)
+            $('#success-msg').html("Your new document ID is: <a href='/manage/" + data.data.id + "'>" + data.data.id + "</a>")
           },
           error: function(data, x, y) {
             if (data.responseJSON && data.responseJSON.error && data.responseJSON.error.length) {

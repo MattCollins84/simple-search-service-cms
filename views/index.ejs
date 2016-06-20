@@ -2,7 +2,7 @@
 
   <div class="container">
 
-    <h1>Select a row <a href="/add" class="btn btn-large btn-primary pull-right"><i class="glyphicon glyphicon-plus"> </i>Add</a></h1>
+    <h1>Select a row <a href="/add" class="btn btn-large btn-primary pull-right"><i class="glyphicon glyphicon-plus"> </i> Add</a></h1>
 
     <form class="form-inline" method="GET" action="/">
       <div class="form-group">
@@ -78,12 +78,18 @@
 
           $.ajax({
             type: "DELETE",
-            url: "/"+id,
+            url: "/row/"+id,
             success: function(data) {
               location.reload();
             },
             error: function(data, x, y) {
+              
+              if (data.status) {
+                return alert("Cannot delete this row, deletes disabled");
+              }
+
               alert("There was a problem deleting this row.");
+
             }
           });
 
