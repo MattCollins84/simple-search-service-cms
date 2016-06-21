@@ -28,8 +28,7 @@
     <p class="mt20"><%= totalRows %> rows found in total.</p>
 
     <script>
-      console.log('TBM', '<%= thisBookmark %>');
-      console.log('NBM', '<%= nextBookmark %>');
+      console.log('<%= sortField %>');
     </script>
 
     <table class="table ellipsis table-striped mt20" id="searchResults">
@@ -37,11 +36,11 @@
       <tr>
         <th><i class="glyphicon glyphicon-th-list"> </i></th>
         <% schema.forEach(field => { %>
-          <th>
+          <th class='<%= ( sortField == field.name ? 'bg-success' : '' ) %>'>
             <%= field.name %>
             <% if (field.type == "number") { %>
 
-              <a href="#" data-sort="<%= field.name %>"><i class="glyphicon glyphicon-sort"> </i></a>
+              <a href="#" data-sort="<%= field.name %>"><i class="glyphicon glyphicon-sort <%= ( sortField == field.name ? '' : 'grey' ) %>"> </i></a>
 
             <% } %>
             </th>
@@ -126,7 +125,6 @@
 
         // no current sort field
         if (!search.sort) {
-          console.log("no")
           search.sort = sortField;
         }
 
@@ -134,7 +132,7 @@
         // same as the new sort field!
         // reverse direction
         else if (search.sort.replace(/^-/, '') == sortField) {
-          console.log("same")
+          
           if (search.sort.match(/^-/)) {
             search.sort = sortField;
           }
@@ -148,15 +146,17 @@
         // we have a current sort field
         // it's different to the new sort field
         else {
-          console.log("different")
+          
           search.sort = sortField;
 
         }
 
+        // rebuild the query string
         var searchStr = [];
         Object.keys(search).forEach(k => searchStr.push(`${k}=${search[k]}`));
         searchStr = "?"+searchStr.join("&");
 
+        // do a redirect!
         location = "/"+searchStr;
 
       });
