@@ -1,5 +1,5 @@
 <%- include('partials/header') %>
-
+  
   <div class="container">
 
     <h1>Manage <%= byId._id %> <a href="/" class="btn btn-large btn-primary pull-right"><i class="glyphicon glyphicon-search"> </i> Search</a></h1>
@@ -9,9 +9,9 @@
         
         <% if (field.type == "string") { %>
           <div class="form-group">
-            <label for="exampleInputEmail1"><%= field.name %></label>
+            <label><%= field.name %></label>
             <div class="input-group">
-              <span class="input-group-addon">Az</span>
+              <span class="input-group-addon"><i class="glyphicon glyphicon-font"> </i></span>
               <input type="text" class="form-control" id="<%= field.name %>" name="<%= field.name %>" value="<%= byId[field.name] %>">
             </div>
           </div>
@@ -19,9 +19,9 @@
 
         <% if (field.type == "number") { %>
           <div class="form-group">
-            <label for="exampleInputEmail1"><%= field.name %></label>
+            <label><%= field.name %></label>
             <div class="input-group">
-              <span class="input-group-addon">#</span>
+              <span class="input-group-addon"><i class="glyphicon glyphicon-signal"> </i></span>
               <input type="number" class="form-control" id="<%= field.name %>" name="<%= field.name %>" value="<%= byId[field.name] %>">
             </div>
           </div>
@@ -29,7 +29,7 @@
 
         <% if (field.type == "boolean") { %>
           <div class="form-group">
-            <label for="exampleInputEmail1"><%= field.name %> </label>
+            <label><%= field.name %> </label>
             <div class="input-group">
               <select class="form-control" id="<%= field.name %>" name="<%= field.name %>">
                 <option value="true" <%= (byId[field.name] == true ? 'selected' : '') %> >true</option>
@@ -37,6 +37,19 @@
               </select>
             </div>
           </div>
+        <% } %>
+
+        <% if (field.type == "arrayofstrings") { %>
+          <div class="form-group">
+            <label><%= field.name %></label>
+            <div class="input-group">
+              <span class="input-group-addon"><i class="glyphicon glyphicon-tags"> </i></span>
+              <input type="string" class="form-control" id="<%= field.name %>" name="<%= field.name %>" value="<%= byId[field.name] %>">
+            </div>
+          </div>
+          <script>
+            $('#<%= field.name %>').tagsInput();
+          </script>
         <% } %>
 
       <% }) %>

@@ -11,7 +11,7 @@
           <div class="form-group">
             <label for="exampleInputEmail1"><%= field.name %></label>
             <div class="input-group">
-              <span class="input-group-addon">Az</span>
+              <span class="input-group-addon"><i class="glyphicon glyphicon-font"> </i></span>
               <input type="text" class="form-control" id="<%= field.name %>" name="<%= field.name %>" value="">
             </div>
           </div>
@@ -21,7 +21,7 @@
           <div class="form-group">
             <label for="exampleInputEmail1"><%= field.name %></label>
             <div class="input-group">
-              <span class="input-group-addon">#</span>
+              <span class="input-group-addon"><i class="glyphicon glyphicon-signal"> </i></span>
               <input type="number" class="form-control" id="<%= field.name %>" name="<%= field.name %>" value="">
             </div>
           </div>
@@ -37,6 +37,19 @@
               </select>
             </div>
           </div>
+        <% } %>
+
+        <% if (field.type == "arrayofstrings") { %>
+          <div class="form-group">
+            <label><%= field.name %></label>
+            <div class="input-group">
+              <span class="input-group-addon"><i class="glyphicon glyphicon-tags"> </i></span>
+              <input type="string" class="form-control" id="<%= field.name %>" name="<%= field.name %>" value="">
+            </div>
+          </div>
+          <script>
+            $('#<%= field.name %>').tagsInput();
+          </script>
         <% } %>
 
       <% }) %>

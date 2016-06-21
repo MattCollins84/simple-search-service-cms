@@ -37,7 +37,14 @@
       <tr>
         <th><i class="glyphicon glyphicon-th-list"> </i></th>
         <% schema.forEach(field => { %>
-          <th><%= field.name %></th>
+          <th>
+            <%= field.name %>
+            <% if (field.type == "number") { %>
+
+              <a href="#" data-sort="<%= field.name %>"><i class="glyphicon glyphicon-sort"> </i></a>
+
+            <% } %>
+            </th>
         <% }) %>
       </tr>
 
@@ -70,6 +77,7 @@
 
     $(document).ready(function() {
 
+      // delete button
       $('a[data-delete]').click(function(a) {
 
         var id = $(this).attr("data-delete");
@@ -95,7 +103,63 @@
 
         }
 
-      })
+      });
+
+      // sort button
+      $('a[data-sort]').click(function(e) {
+
+        // get our new sort field
+        var sortField = $(this).attr("data-sort");
+
+        // find our current search params
+        var search = {};
+        if (location.search.replace(/^\?/, '') != "") {
+          
+          location.search.replace(/^\?/, '')
+          .split("&")
+          .forEach(x => { 
+            var split = x.split("=");
+            search[split[0]] = split[1];
+          });
+
+        }
+
+        // no current sort field
+        if (!search.sort) {
+          console.log("no")
+          search.sort = sortField;
+        }
+
+        // we have a current sort field
+        // same as the new sort field!
+        // reverse direction
+        else if (search.sort.replace(/^-/, '') == sortField) {
+          console.log("same")
+          if (search.sort.match(/^-/)) {
+            search.sort = sortField;
+          }
+          
+          else {
+            search.sort = "-"+sortField
+          }
+
+        }
+
+        // we have a current sort field
+        // it's different to the new sort field
+        else {
+          console.log("different")
+          search.sort = sortField;
+
+        }
+
+        var searchStr = [];
+        Object.keys(search).forEach(k => searchStr.push(`${k}=${search[k]}`));
+        searchStr = "?"+searchStr.join("&");
+
+        location = "/"+searchStr;
+
+      });
 
     })
 

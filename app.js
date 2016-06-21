@@ -36,7 +36,17 @@ app.get('/', function (req, res) {
   const q = req.query.q || "*:*";
   const bookmark = req.query.bookmark || "";
 
-  homepage.render({ limit: limit, q: q, bookmark: bookmark }, function(err, data) {
+  var opts = { 
+    limit: limit, 
+    q: q, 
+    bookmark: bookmark
+  }
+
+  if (req.query.sort) {
+    opts.sort = '"'+req.query.sort+'"'
+  }
+
+  homepage.render(opts, function(err, data) {
     
     if (err) {
       const errors = parseErrors(err)

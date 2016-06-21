@@ -1,11 +1,6 @@
-Revisit:
-Lockdown = readonly
-Test front-to-back
-
-UI:
-- Tidy it up
-
 Readme
+Sortable columns
+Local ENV variable support
 
 Questions:
 - if someone supplies a number into a string field, do we care?
