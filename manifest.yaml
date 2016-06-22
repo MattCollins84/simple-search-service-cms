@@ -10,7 +10,7 @@ applications:
   disk_quota: 512M
   memory: 256M
   host: simple-search-service-cms-${random-word}
-  domain: mybluemix.net
+  domain: eu-gb.mybluemix.net
   random-route: true
   command: node app.js
   services:
