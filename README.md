@@ -89,10 +89,10 @@ TO COME
 
 Clone this repository then run `npm install` to add the Node.js libraries required to run the app.
 
-Then create an environment variable that mimics Cloud Foundry e.g.
+Then create an environment variable that store your Cloudant URL:
 
 ```sh
-export VCAP_SERVICES='{"cloudantNoSQLDB":[{"name":"simple-search-service-cms-cloudant-service","label":"cloudantNoSQLDB","plan":"Shared","credentials":{"username":"USERNAME","password":"PASSWORD","host":"HOSTNAME","port":443,"url":"https://USERNAME:PASSWORD@HOSTNAME"}}]}'
+export SSS_URL='https://USERNAME:PASSWORD@HOSTNAME'
 ```
 
 replacing the `USERNAME`, `PASSWORD` and `HOSTNAME` placeholders for your own Cloudant account's details.
@@ -114,11 +114,11 @@ node app.js
 
 or set a custom environment variable in Bluemix.
 
-When lockdown mode is detected, all web requests will be get a `403` response except the `/` endpoint which will continue to work. This will allow the data to be searched, but not modified.
+When lockdown mode is detected, all web requests will be get a `403` response except the homepage which will continue to work. This will allow the data to be searched, but not modified.
 
 ### Privacy Notice
 
-The Simple Search ServiceCMS web application includes code to track deployments to Bluemix and other Cloud Foundry platforms. The following information is sent to a [Deployment Tracker](https://github.com/IBM-Bluemix/cf-deployment-tracker-service) service on each deployment:
+The Simple Search Service CMS web application includes code to track deployments to Bluemix and other Cloud Foundry platforms. The following information is sent to a [Deployment Tracker](https://github.com/IBM-Bluemix/cf-deployment-tracker-service) service on each deployment:
 
 * Application Name (`application_name`)
 * Space ID (`space_id`)

@@ -62,7 +62,7 @@
       $.ajax({
         type: "GET",
         url: "/",
-        data: "partial=true&bookmark="+bookmark+"&limit=<%= limit %>&q=<%= q %>",
+        data: "partial=true&bookmark="+bookmark+"&limit=<%= limit %>&q=<%= q %>&sort=<%= sort %>",
         success: function(data) {
           var t = $('table#searchResults tr#row-showMore').remove();
           $('table#searchResults tbody').append(data);

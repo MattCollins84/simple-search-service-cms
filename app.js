@@ -26,7 +26,9 @@ app.use(express.static(__dirname + '/public'));
 app.use(compression());
 
 // posted body parser
-const bodyParser = require('body-parser')({extended:true})
+const bodyParser = require('body-parser');
+const bpJSON = bodyParser.json();
+const bpUrlencoded = bodyParser.urlencoded({ extended: true});
 
 // home
 app.get('/', function (req, res) {
@@ -74,7 +76,7 @@ app.get('/manage/:id', isloggedin(), function (req, res) {
 });
 
 // submit edits
-app.put('/row/:id', isloggedin(), bodyParser, function (req, res) {
+app.put('/row/:id', isloggedin(), bpJSON, bpUrlencoded, function (req, res) {
   
   edit.process(req.params.id, req.body, function(err, data) {
 
@@ -106,7 +108,7 @@ app.get('/add', isloggedin(), function (req, res) {
 });
 
 // submit inserts
-app.post('/row', isloggedin(), bodyParser, function (req, res) {
+app.post('/row', isloggedin(), bpJSON, bpUrlencoded, function (req, res) {
   
   insert.process(req.body, function(err, data) {
 
